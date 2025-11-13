@@ -18,7 +18,7 @@ import fs from "fs";
 let pokedex;
 // Essaie d’abord de lire et parser le fichier local pokedex.json
 try {
-  const data = fs.readFileSync("pokedex.json", "utf8");
+  const data = fs.readFileSync("01_pokedex/pokedex.json", "utf8");
   pokedex = JSON.parse(data);
   console.log("✅ Fichier chargé avec succès !");
 } catch (err) {
@@ -78,36 +78,82 @@ sortByWeight();
  * Retourne les évolutions d’un Pokémon donné (s’il en a)
  */
 function getEvolutions(name) {
+  // TODO : chercher le Pokémon, vérifier la clé "next_evolution"
   const arrayPokemon = [];
   for (let i = 0; i < pokedex.pokemon.length; i++) {
-    const currentPokemon = pokedex.pokemon[i];
-    if (currentPokemon.name === name) {
-      console.log(`${currentPokemon.name}`);
-    }
-
-    if (currentPokemon.next_evolution) {
-      for (let evo of currentPokemon.next_evolution) {
-        arrayPokemon.push(evo.name);
+    if (pokedex.pokemon[i].name === name) {
+      for (let j = 0; j < pokedex.pokemon[i].next_evolution.length; j++) {
+        arrayPokemon.push(pokedex.pokemon[i].next_evolution[j].name);
       }
-    } else {
-      console.log(`${name}`);
+      console.log(arrayPokemon);
     }
-    break;
   }
-} // TODO : chercher le Pokémon, vérifier la clé "next_evolution"
+}
+
+getEvolutions("Bulbasaur");
+getEvolutions("Pikachu");
 
 /**
  * Retourne un objet complet représentant le Pokémon recherché
  */
 function searchPokemon(name) {
-  // TODO : trouver le Pokémon, retourner ses infos principales
-}
+  // On récupère le tableau de Pokémon
+  const pokemons = pokedex.pokemon;
 
+  // On cherche le Pokémon avec une boucle simple
+  //let pokemonTrouve = null;
+
+  for (let i = 0; i < pokemons.length; i++) {
+    if (pokemons[i].name === name) {
+      pokemonTrouve = pokemons[i];
+    } else if (pokemons[i].name === null) {
+      console.log("Pokémon introuvable");
+      return null;
+    } else {
+    }
+    // --- Affichage simple ---
+  }
+  console.log("Nom :", pokemonTrouve.name);
+
+  // Types
+  for (let i = 0; i < pokemonTrouve.type.length; i++) {
+    console.log("Type :", pokemonTrouve.type[i]);
+  }
+
+  console.log("Taille :", pokemonTrouve.height);
+  console.log("Poids :", pokemonTrouve.weight);
+
+  // Évolutions
+  if (pokemonTrouve.next_evolution) {
+    for (let i = 0; i < pokemonTrouve.next_evolution.length; i++) {
+      console.log("Évolutions :", pokemonTrouve.next_evolution[i].name);
+    }
+  } else {
+    console.log("Aucune");
+  }
+  // Faiblesses
+  for (let i = 0; i < pokemonTrouve.weaknesses.length; i++) {
+    console.log("Faiblesses :", pokemonTrouve.weaknesses[i]);
+  }
+
+  return pokemonTrouve; // pas obligatoire mais utile
+}
+/*   const recherchePokemon = [];
+
+  for (let i = 0; i < pokedex.pokemon.length; i++) 
+  {
+    if (pokedex.pokemon[i].name === name) 
+      console.log(); 
+  }  */
+
+// TODO : trouver le Pokémon, retourner ses infos principales
+
+searchPokemon("Nidorina");
 // ---------------------------------------------------------------
 // 🔍 Tests rapides (tu peux commenter ou adapter ces lignes)
 // ---------------------------------------------------------------
 
 // console.log(countPokemon());
 // console.log(heavyPokemon().slice(0, 5));
-console.log(getEvolutions("Bulbasaur"));
-console.log(searchPokemon("Pikachu"));
+//console.log(getEvolutions("Bulbasaur"));
+//console.log(searchPokemon("Pikachu"));
